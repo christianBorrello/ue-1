@@ -34,11 +34,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputAction* LookAction;
+
 	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 
 protected:
 	virtual void BeginPlay() override;
 	void MoveForward(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
 
 private:
 	UPROPERTY(VisibleAnywhere)
