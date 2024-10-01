@@ -25,9 +25,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	virtual void BeginPlay() override;
-	void MoveForward(float Value);
-
 	UPROPERTY(EditAnywhere, Category = Input) // HAS TO BE SET IN BLUEPRINT
 	UInputMappingContext* SlashContext;
 
@@ -37,17 +34,22 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input) // HAS TO BE SET IN BLUEPRINT
 	UInputAction* LookAction;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	UPROPERTY(EditAnywhere, Category = Input) // HAS TO BE SET IN BLUEPRINT
+	UInputAction* JumpAction;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair) // HAS TO BE SET IN BLUEPRINT
 	UGroomComponent* HairGroom;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair) // HAS TO BE SET IN BLUEPRINT
 	UGroomComponent* EyebrowsGroom;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair) // HAS TO BE SET IN BLUEPRINT
 	USkeletalMeshComponent* HairMesh;
 
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
+	virtual void BeginPlay() override;
+
+	void Move(const FInputActionValue& Value); // HAS TO BE SET IN BLUEPRINT
+	void Look(const FInputActionValue& Value); // HAS TO BE SET IN BLUEPRINT
 
 private:	
 	UPROPERTY(VisibleAnywhere)

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/SlashCharacter.h"
+#include "Characters/SlashCharacter.h"
 #include "Components/InputComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -41,15 +41,6 @@ ASlashCharacter::ASlashCharacter()
 	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
 	// Associa il componente alla mesh principale
 	HairMesh->SetupAttachment(GetMesh());
-
-	// Specifica il socket (in questo caso "head")
-	HairMesh->SetRelativeLocation(FVector::ZeroVector);
-	HairMesh->SetRelativeRotation(FRotator::ZeroRotator);
-	HairMesh->SetRelativeScale3D(FVector(1.0f)); // Optional: Se vuoi assicurarti che l'offset sia nullo
-	HairMesh->SetWorldLocation(GetMesh()->GetSocketLocation(TEXT("head")));
-	HairMesh->SetWorldRotation(GetMesh()->GetSocketRotation(TEXT("head")));
-	HairMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("head"));
-
 }
 
 void ASlashCharacter::BeginPlay()
@@ -62,16 +53,6 @@ void ASlashCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(SlashContext, 0);
 		}
-	}
-}
-
-// Old input system for moving forward
-void ASlashCharacter::MoveForward(float Value)
-{
-	if (Controller && (Value != 0.f)) 
-	{
-		FVector Forward = GetActorForwardVector();
-		AddMovementInput(Forward, Value);
 	}
 }
 
@@ -113,7 +94,6 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	}
-
-	//PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ASlashCharacter::MoveForward);
 }
