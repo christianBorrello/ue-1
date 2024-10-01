@@ -3,6 +3,7 @@
 
 #include "Character/SlashCharacter.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -29,13 +30,26 @@ ASlashCharacter::ASlashCharacter()
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm);
 
-	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
-	Hair->SetupAttachment(GetMesh());
-	Hair->AttachmentName = FString("head");
+	HairGroom = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	HairGroom->SetupAttachment(GetMesh());
+	HairGroom->AttachmentName = FString("head");
 
-	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
-	Eyebrows->SetupAttachment(GetMesh());
-	Eyebrows->AttachmentName = FString("head");
+	EyebrowsGroom = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
+	EyebrowsGroom->SetupAttachment(GetMesh());
+	EyebrowsGroom->AttachmentName = FString("head");
+
+	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
+	// Associa il componente alla mesh principale
+	HairMesh->SetupAttachment(GetMesh());
+
+	// Specifica il socket (in questo caso "head")
+	HairMesh->SetRelativeLocation(FVector::ZeroVector);
+	HairMesh->SetRelativeRotation(FRotator::ZeroRotator);
+	HairMesh->SetRelativeScale3D(FVector(1.0f)); // Optional: Se vuoi assicurarti che l'offset sia nullo
+	HairMesh->SetWorldLocation(GetMesh()->GetSocketLocation(TEXT("head")));
+	HairMesh->SetWorldRotation(GetMesh()->GetSocketRotation(TEXT("head")));
+	HairMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("head"));
+
 }
 
 void ASlashCharacter::BeginPlay()

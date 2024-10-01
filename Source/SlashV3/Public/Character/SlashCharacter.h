@@ -12,6 +12,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
+class USkeletalMeshComponent;
 
 UCLASS()
 class SLASHV3_API ASlashCharacter : public ACharacter
@@ -36,6 +37,15 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input) // HAS TO BE SET IN BLUEPRINT
 	UInputAction* LookAction;
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	UGroomComponent* HairGroom;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	UGroomComponent* EyebrowsGroom;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Hair)
+	USkeletalMeshComponent* HairMesh;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 
@@ -45,10 +55,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
-
-	UPROPERTY(VisibleAnywhere, Category = Hair)
-	UGroomComponent* Hair;
-
-	UPROPERTY(VisibleAnywhere, Category = Hair)
-	UGroomComponent* Eyebrows;
 };
