@@ -3,6 +3,8 @@
 
 #include "Items/Item.h"
 #include "SlashV3/DebugMacros.h"
+#include "Components/SphereComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -10,27 +12,20 @@ AItem::AItem()
  	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
-	RootComponent = ItemMesh;
+	SK_Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_Mesh_Component"));
+	RootComponent = SK_Mesh;
+
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*
 	
-	int32 AvgInt = Avg<int32>(1, 3);
-	UE_LOG(LogTemp, Warning, TEXT("Avg of 1 and 3: %d"), AvgInt);
-
-	float AvgFloat = Avg<float>(4.345f, 6.6f);
-	UE_LOG(LogTemp, Warning, TEXT("Avg of 4.345 and 6.6: %f"), AvgFloat);
-
-	FVector AvgVector = Avg<FVector>(FVector(1.0f, 5.f, 7.f), FVector(2.f, 15.f, 27.f));
-	UE_LOG(LogTemp, Warning, TEXT("Avg of (1.0f, 5.f, 7.f) and (2.f, 15.f, 27.f): %s"), *AvgVector.ToString());
-	
-	*/
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereBeginOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 }
 
 float AItem::TransformedSin()
@@ -41,6 +36,24 @@ float AItem::TransformedSin()
 float AItem::TransformedCos()
 {
 	return Amplitude * FMath::Cos(RunningTime * TimeConstant);
+}
+
+void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
+							int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (GEngine) 
+	{
+		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, FString("BeginOverlap: " + OtherActor->GetName()));
+	}
+
+}
+
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, FString("EndOverlap: " + OtherActor->GetName()));
+	}
 }
 
 // Called every frame
